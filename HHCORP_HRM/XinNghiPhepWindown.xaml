@@ -1,0 +1,49 @@
+﻿<Window x:Class="HHCORP_HRM.XinNghiPhepWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Xin Nghỉ Phép" Height="400" Width="600">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Tiêu đề -->
+        <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="Xin Nghỉ Phép" FontSize="20" FontWeight="Bold" Margin="0,0,0,10"/>
+
+        <!-- ComboBox chọn MaNV (chỉ hiển thị cho Tổng Giám đốc) -->
+        <Label Grid.Row="1" Grid.Column="0" Content="Mã NV:"/>
+        <ComboBox x:Name="cbMaNV" Grid.Row="1" Grid.Column="1" Margin="5" SelectionChanged="cbMaNV_SelectionChanged" Visibility="Collapsed"/>
+
+        <!-- Thông tin nhân viên -->
+        <Label Grid.Row="2" Grid.Column="0" Content="Mã NV:"/>
+        <TextBox x:Name="txtMaNV" Grid.Row="2" Grid.Column="1" IsReadOnly="True" Margin="5"/>
+
+        <Label Grid.Row="3" Grid.Column="0" Content="Họ Tên:"/>
+        <TextBox x:Name="txtHoTen" Grid.Row="3" Grid.Column="1" IsReadOnly="True" Margin="5"/>
+
+        <Label Grid.Row="4" Grid.Column="0" Content="Ngày Bắt Đầu:"/>
+        <DatePicker x:Name="dpNgayBatDau" Grid.Row="4" Grid.Column="1" Margin="5"/>
+
+        <Label Grid.Row="5" Grid.Column="0" Content="Ngày Kết Thúc:"/>
+        <DatePicker x:Name="dpNgayKetThuc" Grid.Row="5" Grid.Column="1" Margin="5"/>
+
+        <Label Grid.Row="6" Grid.Column="0" Content="Lý Do:"/>
+        <TextBox x:Name="txtLyDo" Grid.Row="6" Grid.Column="1" Margin="5" Height="60" TextWrapping="Wrap"/>
+
+        <!-- Nút điều khiển -->
+        <StackPanel Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
+            <Button x:Name="btnGuiDon" Content="Gửi Đơn" Width="80" Margin="5" Click="btnGuiDon_Click"/>
+            <Button x:Name="btnHuy" Content="Hủy" Width="80" Margin="5" Click="btnHuy_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>

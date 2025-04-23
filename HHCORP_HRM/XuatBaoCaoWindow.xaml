@@ -1,0 +1,33 @@
+﻿<Window x:Class="HHCORP_HRM.XuatBaoCaoWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Xuất Báo Cáo" Height="400" Width="600">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Text="Xuất Báo Cáo" FontSize="20" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,10">
+            <TextBlock Text="Nhân Viên:" Width="100" VerticalAlignment="Center"/>
+            <ComboBox x:Name="cbNhanVien" Width="200"/>
+        </StackPanel>
+
+        <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,0,0,10">
+            <TextBlock Text="Ngày Bắt Đầu:" Width="100" VerticalAlignment="Center"/>
+            <DatePicker x:Name="dpNgayBatDau" Width="200"/>
+        </StackPanel>
+
+        <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="0,0,0,10">
+            <TextBlock Text="Ngày Kết Thúc:" Width="100" VerticalAlignment="Center"/>
+            <DatePicker x:Name="dpNgayKetThuc" Width="200"/>
+        </StackPanel>
+
+        <Button x:Name="btnXuatBaoCao" Grid.Row="4" Content="Xuất Báo Cáo" Width="100" Height="30" HorizontalAlignment="Center" Click="btnXuatBaoCao_Click"/>
+    </Grid>
+</Window>

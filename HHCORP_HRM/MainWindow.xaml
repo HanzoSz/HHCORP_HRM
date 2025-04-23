@@ -1,0 +1,48 @@
+﻿<Window x:Class="HHCORP_HRM.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="HHCORP - Hệ Thống Quản Lý Nhân Sự" Height="500" Width="700"
+        WindowStartupLocation="CenterScreen" Background="White">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Tiêu đề -->
+        <TextBlock Grid.Row="0" Text="HHCORP - Hệ Thống Quản Lý Nhân Sự" FontSize="24" FontWeight="Bold" 
+                   HorizontalAlignment="Center" Margin="0,0,0,20" Foreground="#FF2E86C1"/>
+
+        <!-- Thông tin người dùng -->
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,0,20">
+            <TextBlock x:Name="txtUserInfo" FontSize="14" Foreground="#FF2E86C1" Margin="0,0,10,0"/>
+            <Button x:Name="btnDangXuat" Content="Đăng Xuất" FontSize="14" Background="#FFDC3545" 
+                    Foreground="White" Padding="10,5" Click="btnDangXuat_Click"/>
+        </StackPanel>
+
+        <!-- Menu chức năng -->
+        <StackPanel Grid.Row="2" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Button x:Name="btnQuanLyNhanVien" Content="Quản Lý Nhân Viên" FontSize="16" 
+                    Background="#FF28A745" Foreground="White" Padding="20,10" Margin="0,10" 
+                    Click="btnQuanLyNhanVien_Click"/>
+            <Button x:Name="btnXinNghiPhep" Content="Xin Nghỉ Phép" FontSize="16" 
+                    Background="#FF28A745" Foreground="White" Padding="20,10" Margin="0,10" 
+                    Click="btnXinNghiPhep_Click"/>
+            <Button x:Name="btnDuyetNghiPhep" Content="Duyệt Nghỉ Phép" FontSize="16" 
+                    Background="#FF28A745" Foreground="White" Padding="20,10" Margin="0,10" 
+                    Click="btnDuyetNghiPhep_Click"/>
+            <Button x:Name="btnChamCong" Content="Chấm Công" FontSize="16" 
+                    Background="#FF28A745" Foreground="White" Padding="20,10" Margin="0,10" 
+                    Click="btnChamCong_Click"/>
+            <Button x:Name="btnXuatBaoCao" Content="Xuất Báo Cáo" FontSize="16" 
+                    Background="#FF28A745" Foreground="White" Padding="20,10" Margin="0,10" 
+                    Click="btnXuatBaoCao_Click"/>
+        </StackPanel>
+
+        <!-- Footer -->
+        <TextBlock Grid.Row="3" Text="© 2025 HHCORP - Thái Nguyên" FontSize="12" 
+                   HorizontalAlignment="Center" Margin="0,20,0,0" Foreground="#FF2E86C1"/>
+    </Grid>
+</Window>
