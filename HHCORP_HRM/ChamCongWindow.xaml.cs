@@ -19,7 +19,7 @@ namespace HHCORP_HRM
 {
     public partial class ChamCongWindow : Window
     {
-        private static readonly string subscriptionKey = "39azDf1RCld9T8xWu8YJGh4IfBRTLQt3J7RZb2kHWOVAUqBo4FGUJQQJ99BCACqBBLyXJ3w3AAAKACOGQ0Eh";
+        private static readonly string subscriptionKey = "8CAX9hNg30n4m7LdSWoi02zSZSuEEHTOb08Yw3eNxgXFIKj8RzSRJQQJ99BCACqBBLyXJ3w3AAAKACOGwe0y";
         private static readonly string endpoint = "https://face-api-hrm.cognitiveservices.azure.com/";
         private static IFaceClient faceClient = new FaceClient(new ApiKeyServiceClientCredentials(subscriptionKey))
         {
@@ -103,7 +103,7 @@ namespace HHCORP_HRM
                     btnSua.IsEnabled = false;
                     btnXoa.IsEnabled = false;
                     btnLamMoi.IsEnabled = false;
-                    btnRegisterFaces.IsEnabled = false;
+                    //btnRegisterFaces.IsEnabled = false;
                     cbMaNV.IsEnabled = false; // Không cho phép chọn nhân viên khác
                     dpThoiGianVao.IsEnabled = false;
                     dpThoiGianRa.IsEnabled = false;

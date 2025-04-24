@@ -36,6 +36,7 @@ namespace HHCORP_HRM
         private void XuatBaoCaoWindow_Loaded(object sender, RoutedEventArgs e)
         {
             LoadNhanVien();
+            cbLoaiBaoCao.SelectedIndex = 0; // Mặc định chọn "Chấm công"
         }
 
         private void LoadNhanVien()
@@ -62,6 +63,25 @@ namespace HHCORP_HRM
             }
         }
 
+        private void cbLoaiBaoCao_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (cbLoaiBaoCao.SelectedItem == null) return;
+
+            string loaiBaoCao = (cbLoaiBaoCao.SelectedItem as ComboBoxItem)?.Content.ToString();
+            if (loaiBaoCao == "Nhân sự")
+            {
+                // Báo cáo nhân sự không cần khoảng thời gian
+                spNgayBatDau.Visibility = Visibility.Collapsed;
+                spNgayKetThuc.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                // Báo cáo chấm công và lương cần khoảng thời gian
+                spNgayBatDau.Visibility = Visibility.Visible;
+                spNgayKetThuc.Visibility = Visibility.Visible;
+            }
+        }
+
         private void btnXuatBaoCao_Click(object sender, RoutedEventArgs e)
         {
             if (cbNhanVien.SelectedValue == null)
@@ -70,75 +90,146 @@ namespace HHCORP_HRM
                 return;
             }
 
-            if (dpNgayBatDau.SelectedDate == null || dpNgayKetThuc.SelectedDate == null)
+            if (cbLoaiBaoCao.SelectedItem == null)
             {
-                MessageBox.Show("Vui lòng chọn ngày bắt đầu và ngày kết thúc!");
+                MessageBox.Show("Vui lòng chọn loại báo cáo!");
                 return;
             }
 
-            DateTime ngayBatDau = dpNgayBatDau.SelectedDate.Value;
-            DateTime ngayKetThuc = dpNgayKetThuc.SelectedDate.Value;
+            string loaiBaoCao = (cbLoaiBaoCao.SelectedItem as ComboBoxItem)?.Content.ToString();
             int selectedMaNV = Convert.ToInt32(cbNhanVien.SelectedValue);
 
-            if (ngayKetThuc < ngayBatDau)
+            // Kiểm tra khoảng thời gian nếu cần
+            DateTime? ngayBatDau = null;
+            DateTime? ngayKetThuc = null;
+            if (loaiBaoCao != "Nhân sự")
             {
-                MessageBox.Show("Ngày kết thúc phải lớn hơn hoặc bằng ngày bắt đầu!");
-                return;
+                if (dpNgayBatDau.SelectedDate == null || dpNgayKetThuc.SelectedDate == null)
+                {
+                    MessageBox.Show("Vui lòng chọn ngày bắt đầu và ngày kết thúc!");
+                    return;
+                }
+
+                ngayBatDau = dpNgayBatDau.SelectedDate.Value;
+                ngayKetThuc = dpNgayKetThuc.SelectedDate.Value;
+
+                if (ngayKetThuc < ngayBatDau)
+                {
+                    MessageBox.Show("Ngày kết thúc phải lớn hơn hoặc bằng ngày bắt đầu!");
+                    return;
+                }
             }
 
             try
             {
+                // Bước 1: Lấy dữ liệu tùy theo loại báo cáo
                 DataTable dt = new DataTable();
+                string query = "";
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
-                    string query = @"
-                        SELECT MaChamCong, MaNV, NgayChamCong, GioVao, GioRa, GhiChu
-                        FROM ChamCong
-                        WHERE MaNV = @MaNV AND NgayChamCong BETWEEN @NgayBatDau AND @NgayKetThuc";
-                    SqlCommand cmd = new SqlCommand(query, conn);
-                    cmd.Parameters.AddWithValue("@MaNV", selectedMaNV);
-                    cmd.Parameters.AddWithValue("@NgayBatDau", ngayBatDau);
-                    cmd.Parameters.AddWithValue("@NgayKetThuc", ngayKetThuc);
-                    SqlDataAdapter adapter = new SqlDataAdapter(cmd);
-                    adapter.Fill(dt);
+                    if (loaiBaoCao == "Chấm công")
+                    {
+                        query = @"
+                            SELECT MaChamCong, MaNV, NgayChamCong, GioVao, GioRa, GhiChu
+                            FROM ChamCong
+                            WHERE MaNV = @MaNV AND NgayChamCong BETWEEN @NgayBatDau AND @NgayKetThuc";
+                        SqlCommand cmd = new SqlCommand(query, conn);
+                        cmd.Parameters.AddWithValue("@MaNV", selectedMaNV);
+                        cmd.Parameters.AddWithValue("@NgayBatDau", ngayBatDau);
+                        cmd.Parameters.AddWithValue("@NgayKetThuc", ngayKetThuc);
+                        SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                        adapter.Fill(dt);
+                    }
+                    else if (loaiBaoCao == "Nhân sự")
+                    {
+                        query = @"
+                            SELECT MaNV, HoTen, NgaySinh, GioiTinh, DiaChi, SoDienThoai, Email
+                            FROM NhanVien
+                            WHERE MaNV = @MaNV";
+                        SqlCommand cmd = new SqlCommand(query, conn);
+                        cmd.Parameters.AddWithValue("@MaNV", selectedMaNV);
+                        SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                        adapter.Fill(dt);
+                    }
+                    else if (loaiBaoCao == "Lương")
+                    {
+                        query = @"
+                            SELECT MaNV, Thang, Nam, LuongCoBan, Thuong, TongLuong
+                            FROM Luong
+                            WHERE MaNV = @MaNV AND NgayTinhLuong BETWEEN @NgayBatDau AND @NgayKetThuc";
+                        SqlCommand cmd = new SqlCommand(query, conn);
+                        cmd.Parameters.AddWithValue("@MaNV", selectedMaNV);
+                        cmd.Parameters.AddWithValue("@NgayBatDau", ngayBatDau);
+                        cmd.Parameters.AddWithValue("@NgayKetThuc", ngayKetThuc);
+                        SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                        adapter.Fill(dt);
+                    }
                 }
 
                 if (dt.Rows.Count == 0)
                 {
-                    MessageBox.Show("Không có dữ liệu chấm công trong khoảng thời gian đã chọn!");
+                    MessageBox.Show($"Không có dữ liệu {loaiBaoCao.ToLower()} trong khoảng thời gian đã chọn!");
                     return;
                 }
 
+                // Bước 2: Hiển thị dialog để chọn đường dẫn lưu file
                 SaveFileDialog saveFileDialog = new SaveFileDialog
                 {
                     Filter = "CSV files (*.csv)|*.csv",
                     DefaultExt = "csv",
-                    FileName = $"BaoCaoChamCong_MaNV_{selectedMaNV}_{DateTime.Now:yyyyMMdd}.csv"
+                    FileName = $"BaoCao_{loaiBaoCao}_MaNV_{selectedMaNV}_{DateTime.Now:yyyyMMdd}.csv"
                 };
 
-                if (saveFileDialog.ShowDialog() == true)
+                if (saveFileDialog.ShowDialog() != true)
                 {
-                    StringBuilder sb = new StringBuilder();
-                    // Thêm tiêu đề cột
-                    string[] columnNames = dt.Columns.Cast<DataColumn>().Select(column => column.ColumnName).ToArray();
-                    sb.AppendLine(string.Join(",", columnNames));
-
-                    // Thêm dữ liệu
-                    foreach (DataRow row in dt.Rows)
-                    {
-                        string[] fields = row.ItemArray.Select(field => field.ToString()).ToArray();
-                        sb.AppendLine(string.Join(",", fields));
-                    }
-
-                    File.WriteAllText(saveFileDialog.FileName, sb.ToString());
-                    MessageBox.Show("Xuất báo cáo thành công!", "Thông báo");
+                    return; // Người dùng hủy việc chọn file
                 }
+
+                string filePath = saveFileDialog.FileName;
+
+                // Bước 3: Lưu thông tin báo cáo vào bảng BaoCao
+                int maBaoCao;
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+                    string insertQuery = @"
+                        INSERT INTO BaoCao (LoaiBaoCao, NgayTao, DuongDan, MaNVTao)
+                        OUTPUT INSERTED.MaBaoCao
+                        VALUES (@LoaiBaoCao, @NgayTao, @DuongDan, @MaNVTao)";
+                    SqlCommand insertCmd = new SqlCommand(insertQuery, conn);
+                    insertCmd.Parameters.AddWithValue("@LoaiBaoCao", loaiBaoCao);
+                    insertCmd.Parameters.AddWithValue("@NgayTao", DateTime.Now);
+                    insertCmd.Parameters.AddWithValue("@DuongDan", filePath);
+                    insertCmd.Parameters.AddWithValue("@MaNVTao", MaNV);
+                    maBaoCao = (int)insertCmd.ExecuteScalar();
+                }
+
+                // Bước 4: Xuất dữ liệu ra file CSV
+                StringBuilder sb = new StringBuilder();
+                // Thêm tiêu đề cột
+                string[] columnNames = dt.Columns.Cast<DataColumn>().Select(column => column.ColumnName).ToArray();
+                sb.AppendLine(string.Join(",", columnNames));
+
+                // Thêm dữ liệu
+                foreach (DataRow row in dt.Rows)
+                {
+                    string[] fields = row.ItemArray.Select(field => $"\"{field.ToString().Replace("\"", "\"\"")}\"").ToArray();
+                    sb.AppendLine(string.Join(",", fields));
+                }
+
+                File.WriteAllText(filePath, sb.ToString());
+                MessageBox.Show($"Xuất báo cáo thành công! Báo cáo đã được lưu vào bảng BaoCao với MaBaoCao = {maBaoCao}", "Thông báo");
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Lỗi khi xuất báo cáo: " + ex.Message);
             }
+        }
+
+        private void btnHuy_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
         }
     }
 }

@@ -57,23 +57,39 @@ namespace HHCORP_HRM
 
         private void ApplyPermissions()
         {
+            // Ẩn tất cả các nút trước, sau đó hiển thị theo vai trò
+            btnQuanLyNhanVien.Visibility = Visibility.Collapsed;
+            btnXinNghiPhep.Visibility = Visibility.Collapsed;
+            btnDuyetNghiPhep.Visibility = Visibility.Collapsed;
+            btnChamCong.Visibility = Visibility.Collapsed;
+            btnXuatBaoCao.Visibility = Visibility.Collapsed;
+            btnDangXuat.Visibility = Visibility.Visible; // Nút Đăng Xuất luôn hiển thị
+
             switch (CurrentUser.VaiTro)
             {
                 case "Tổng Giám đốc":
-                    // Có đầy đủ quyền
+                    // Hiển thị tất cả các nút
+                    btnQuanLyNhanVien.Visibility = Visibility.Visible;
+                    btnXinNghiPhep.Visibility = Visibility.Visible;
+                    btnDuyetNghiPhep.Visibility = Visibility.Visible;
+                    btnChamCong.Visibility = Visibility.Visible;
+                    btnXuatBaoCao.Visibility = Visibility.Visible;
                     break;
 
                 case "Kế toán":
-                    // Vô hiệu hóa các chức năng không được phép
-                    btnQuanLyNhanVien.IsEnabled = false;
-                    btnDuyetNghiPhep.IsEnabled = false;
+                    // Hiển thị các nút: Xin Nghỉ Phép, Chấm Công, Xuất Báo Cáo
+                    btnXinNghiPhep.Visibility = Visibility.Visible;
+                    btnChamCong.Visibility = Visibility.Visible;
+                    btnXuatBaoCao.Visibility = Visibility.Visible;
+                    btnQuanLyNhanVien.Visibility = Visibility.Visible;
                     break;
 
                 case "Nhân viên":
-                    // Chỉ có quyền xem thông tin cá nhân và gửi đơn nghỉ phép
-                    
-                    btnDuyetNghiPhep.IsEnabled = false;
-                    
+                    // Chỉ hiển thị nút Xin Nghỉ Phép
+                    btnQuanLyNhanVien.Visibility = Visibility.Visible;
+                    btnXinNghiPhep.Visibility = Visibility.Visible;
+                    btnChamCong.Visibility = Visibility.Visible;
+                    btnXuatBaoCao.Visibility = Visibility.Visible;
                     break;
 
                 default:

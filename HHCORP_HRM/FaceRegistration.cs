@@ -11,7 +11,7 @@ namespace HHCORP_HRM
 {
     public static class FaceRegistration
     {
-        private static readonly string subscriptionKey = "39azDf1RCld9T8xWu8YJGh4IfBRTLQt3J7RZb2kHWOVAUqBo4FGUJQQJ99BCACqBBLyXJ3w3AAAKACOGQ0Eh"; // Thay bằng khóa của bạn
+        private static readonly string subscriptionKey = "8CAX9hNg30n4m7LdSWoi02zSZSuEEHTOb08Yw3eNxgXFIKj8RzSRJQQJ99BCACqBBLyXJ3w3AAAKACOGwe0y"; // Thay bằng khóa của bạn
         private static readonly string endpoint = "https://face-api-hrm.cognitiveservices.azure.com/"; // Thay bằng endpoint của bạn
         private static IFaceClient faceClient = new FaceClient(new ApiKeyServiceClientCredentials(subscriptionKey))
         {
